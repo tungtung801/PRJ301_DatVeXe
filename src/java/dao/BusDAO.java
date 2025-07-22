@@ -17,14 +17,14 @@ import utils.DBUtils;
  * @author Tung Nguyen
  */
 public class BusDAO {
-
+    
     public BusDAO() {
     }
-
+    
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-
+    
     private static final String GET_ALL
             = "SELECT b.*, bt.TypeName as BusTypeName "
             + "FROM [dbo].[Buses] b "
@@ -36,19 +36,18 @@ public class BusDAO {
     private static final String GET_BUS_BY_NUMBER = "SELECT * FROM [dbo].[Buses] "
             + "WHERE BusNumber = ?";
     
-    
     private static final String UPDATE = "UPDATE [dbo].[Buses] SET [status] = ? WHERE [license_plate] = ?";
-
+    
     public List<BusDTO> getAllBus() {
         List<BusDTO> busList = new ArrayList<>();
         BusDTO bus = null;
-
+        
         String sql = GET_ALL;
         try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-
+            
             while (rs.next()) {
                 bus = new BusDTO();
                 bus.setBusID(rs.getInt("BusID"));
@@ -58,7 +57,7 @@ public class BusDAO {
                 bus.setBusTypeName(rs.getString("BusTypeName"));
                 bus.setDescription(rs.getString("Description"));
                 bus.setStatus(rs.getString("Status"));
-
+                
                 busList.add(bus);
             }
         } catch (Exception e) {
@@ -69,7 +68,7 @@ public class BusDAO {
         }
         return busList;
     }
-    
+
 //    // Thêm vào BusDAO
 //public List<BusDTO> getAllAvailableBuses() {
 //    List<BusDTO> busList = new ArrayList<>();
@@ -99,10 +98,9 @@ public class BusDAO {
 //    }
 //    return busList;
 //}
-
     public boolean addBus(BusDTO newBus) {
         boolean isAdded = false;
-
+        
         try {
             conn = DBUtils.getConnection(); // Lấy kết nối từ lớp tiện ích
             if (conn != null) {
@@ -113,14 +111,14 @@ public class BusDAO {
                 ps.setInt(3, newBus.getBusTypeID());
                 ps.setString(4, newBus.getDescription());
                 ps.setString(5, newBus.getStatus());
-
+                
                 int rowsAffected = ps.executeUpdate();
-
+                
                 if (rowsAffected > 0) {
                     isAdded = true;
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             // Xử lý các lỗi khác (ví dụ: lỗi kết nối)
             System.err.println("General Error when adding bus: " + e.getMessage());
             e.printStackTrace();
@@ -132,16 +130,16 @@ public class BusDAO {
         return isAdded;
     }
     
-    public BusDTO getBusByNumber(String BusNumber){
+    public BusDTO getBusByNumber(String BusNumber) {
         BusDTO bus = null;
         
-        try{
+        try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(GET_BUS_BY_NUMBER);
             ps.setString(1, BusNumber);
             rs = ps.executeQuery();
             
-            if(rs.next()){
+            if (rs.next()) {
                 bus = new BusDTO();
                 bus.setBusID(rs.getInt("BusID"));
                 bus.setBusNumber(rs.getString("BusNumber"));
@@ -151,31 +149,31 @@ public class BusDAO {
                 bus.setDescription(rs.getString("Description"));
                 bus.setStatus(rs.getString("Status"));
             }
-        }catch(Exception e){
-            System.out.println("Error in getBusByNumber(): "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error in getBusByNumber(): " + e.getMessage());
             e.printStackTrace();
-        }finally{
+        } finally {
             DBUtils.closeResources(conn, ps, rs);
         }
         return bus;
     }
     
-    public List<BusDTO> getBusByName(String name){
+    public List<BusDTO> getBusByName(String name) {
         BusDTO bus = null;
         List<BusDTO> busList = new ArrayList<>();
         
-        String sql = "SELECT b.*, bt.TypeName as BusTypeName " 
-               + "FROM [dbo].[Buses] b "
-               + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
-               + "WHERE b.BusName = ?";
+        String sql = "SELECT b.*, bt.TypeName as BusTypeName "
+                + "FROM [dbo].[Buses] b "
+                + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
+                + "WHERE b.BusName = ?";
         
-        try{
+        try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, name);
             rs = ps.executeQuery();
             
-            while(rs.next()){
+            while (rs.next()) {
                 bus = new BusDTO();
                 bus.setBusID(rs.getInt("BusID"));
                 bus.setBusNumber(rs.getString("BusNumber"));
@@ -187,31 +185,31 @@ public class BusDAO {
                 
                 busList.add(bus);
             }
-        }catch(Exception e){
-            System.out.println("Error in getBusByNumber(): "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error in getBusByNumber(): " + e.getMessage());
             e.printStackTrace();
-        }finally{
+        } finally {
             DBUtils.closeResources(conn, ps, rs);
         }
         return busList;
     }
     
-    public List<BusDTO> getBusByStatus(String status){
+    public List<BusDTO> getBusByStatus(String status) {
         BusDTO bus = null;
         List<BusDTO> busList = new ArrayList<>();
         
-        String sql = "SELECT b.*, bt.TypeName as BusTypeName " 
-               + "FROM [dbo].[Buses] b "
-               + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
-               + "WHERE b.Status = ?";
+        String sql = "SELECT b.*, bt.TypeName as BusTypeName "
+                + "FROM [dbo].[Buses] b "
+                + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
+                + "WHERE b.Status = ?";
         
-        try{
+        try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, status);
             rs = ps.executeQuery();
             
-            while(rs.next()){
+            while (rs.next()) {
                 bus = new BusDTO();
                 bus.setBusID(rs.getInt("BusID"));
                 bus.setBusNumber(rs.getString("BusNumber"));
@@ -223,32 +221,32 @@ public class BusDAO {
                 
                 busList.add(bus);
             }
-        }catch(Exception e){
-            System.out.println("Error in getBusByNumber(): "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error in getBusByNumber(): " + e.getMessage());
             e.printStackTrace();
-        }finally{
+        } finally {
             DBUtils.closeResources(conn, ps, rs);
         }
         return busList;
     }
     
-    public List<BusDTO> getBusByNameNStatus(String name, String status){
+    public List<BusDTO> getBusByNameNStatus(String name, String status) {
         BusDTO bus = null;
         List<BusDTO> busList = new ArrayList<>();
         
-        String sql = "SELECT b.*, bt.TypeName as BusTypeName " 
-               + "FROM [dbo].[Buses] b "
-               + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
-               + "WHERE b.BusName = ? AND b.Status = ?";
+        String sql = "SELECT b.*, bt.TypeName as BusTypeName "
+                + "FROM [dbo].[Buses] b "
+                + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
+                + "WHERE b.BusName = ? AND b.Status = ?";
         
-        try{
+        try {
             conn = DBUtils.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, name);
             ps.setString(2, status);
             rs = ps.executeQuery();
             
-            while(rs.next()){
+            while (rs.next()) {
                 bus = new BusDTO();
                 bus.setBusID(rs.getInt("BusID"));
                 bus.setBusNumber(rs.getString("BusNumber"));
@@ -260,12 +258,63 @@ public class BusDAO {
                 
                 busList.add(bus);
             }
-        }catch(Exception e){
-            System.out.println("Error in getBusByNumber(): "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error in getBusByNumber(): " + e.getMessage());
             e.printStackTrace();
-        }finally{
+        } finally {
             DBUtils.closeResources(conn, ps, rs);
         }
         return busList;
+    }
+        
+    public BusDTO getBusByID(int busID) {
+        BusDTO bus = null;
+        
+        try {
+            conn = DBUtils.getConnection();
+            String sql = "SELECT * FROM Buses WHERE BusID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, busID);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                bus = new BusDTO();
+                bus.setBusID(rs.getInt("BusID"));
+                bus.setBusNumber(rs.getString("BusNumber"));
+                bus.setBusName(rs.getString("BusName"));
+                bus.setBusTypeID(rs.getInt("BusTypeID"));
+                bus.setStatus(rs.getString("Status"));
+                // Thiết lập các thuộc tính khác của bus nếu cần
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getBusByID: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            DBUtils.closeResources(conn, ps, rs);
+        }
+        
+        return bus;
+    }
+    
+    public boolean updateBusStatus(int busID, String newStatus) {
+        boolean success = false;
+        
+        String sql = "UPDATE Buses SET status = ? WHERE busID = ?";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newStatus);
+            ps.setInt(2, busID);
+            
+            int rowsAffected = ps.executeUpdate();
+            success = rowsAffected > 0;
+            
+        } catch (Exception e) {
+            System.out.println("Error in updateBusStatusWithConnection: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            DBUtils.closeResources(conn, ps);
+        }
+        return success;
     }
 }

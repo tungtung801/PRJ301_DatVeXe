@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,7 +34,9 @@ import model.BusDTO;
 import model.LocationDTO;
 import model.ScheduleDTO;
 import model.StaffDTO;
+import model.UserDTO;
 import utils.AuthUtils;
+import utils.DBUtils;
 
 /**
  *
@@ -72,6 +76,14 @@ public class ScheduleController extends HttpServlet {
                 url = handleScheduleSearching(request, response);
             } else if ("addSchedule".equals(getAction)) {
                 url = handleScheduleAdding(request, response);
+            } else if ("updateSchedule".equals(getAction)) {
+                url = handleUpdateSchedule(request, response);
+            } else if ("prepareUpdateSchedule".equals(getAction)) {
+                url = prepareUpdateSchedule(request, response);
+            } else if ("searchNV".equals(getAction)) {
+                url = handleSearchForEmploy(request, response);
+            } else if ("gotosearchNV".equals(getAction)) {
+                url = gotosearchNV(request, response);
             } else {
                 url = handleDefaultScheduleDisplay(request, response);
             }
@@ -122,6 +134,51 @@ public class ScheduleController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    /// NÀY CHO NHÂN VIÊN (CẢ TÀI XẾ + TIÉP VIÊN)
+    private String handleSearchForEmploy(HttpServletRequest request, HttpServletResponse response) {
+        String url = "searchNV.jsp";
+        ScheduleDAO sdao = new ScheduleDAO();
+        String message = "";
+
+        String name = request.getParameter("employeeName");
+        List<ScheduleDTO> schelist = new ArrayList<>();
+//        if(!AuthUtils.isNhanVien(request) || !AuthUtils.isAdmin(request)){
+//            return "Home.jsp";
+//        }
+        if (name.isEmpty() || name == null) {
+            message += "Enter Name to search.";
+            request.setAttribute("message", message);
+            return url;
+        }
+        try {
+            schelist = sdao.getEmployeeSchedule(name);
+            if (schelist.isEmpty() || schelist == null) {
+                message += "Employee does not have schedule yet.";
+            } else {
+
+            }
+        } catch (Exception e) {
+
+        }
+        request.setAttribute("name", name);
+        request.setAttribute("schelist", schelist);
+        request.setAttribute("message", message);
+        return "searchNV.jsp";
+    }
+
+    private String gotosearchNV(HttpServletRequest request, HttpServletResponse response) {
+        UserDTO currentUser = AuthUtils.getCurrentUser(request);
+        if (currentUser == null) {
+            return "login.jsp";
+        }
+
+        if (!(AuthUtils.isNhanVien(request) || AuthUtils.isAdmin(request))) {
+            return "Home.jsp";
+        }
+
+        return "searchNV.jsp";
+    }
 
     /// NÀY CỦA ADMIN =====================================================================================///
     private String handleScheduleShowingAdmin(HttpServletRequest request, HttpServletResponse response) {
@@ -219,7 +276,137 @@ public class ScheduleController extends HttpServlet {
         return url;
     }
 
-    /// ADMIN ================================================================================================///
+    // Add this new method to handle "prepareUpdateSchedule" action
+    private String prepareUpdateSchedule(HttpServletRequest request, HttpServletResponse response) {
+        String url = SCHEDULE_ADMIN;
+        if (!AuthUtils.isLoggedIn(request)) {
+            return LOGIN_PAGE;
+        }
+        if (!AuthUtils.isAdmin(request)) {
+            return WELCOME_PAGE;
+        }
+
+        try {
+            int scheduleID = Integer.parseInt(request.getParameter("scheduleID"));
+            ScheduleDTO scheduleToEdit = sdao.ScheduleById(scheduleID);
+
+            if (scheduleToEdit != null) {
+                request.setAttribute("isEdit", true);
+                request.setAttribute("scheduleToEdit", scheduleToEdit);
+
+                // Lấy danh sách xe sẵn sàng
+                List<BusDTO> availableBuses = getAllAvailableBus(request, response);
+
+                // Nếu lịch trình đang gặp sự cố, đảm bảo loại bỏ xe hiện tại khỏi danh sách
+                if ("Sự cố".equals(scheduleToEdit.getStatus())) {
+                    // Tạo danh sách mới không chứa xe đang gặp sự cố
+                    List<BusDTO> filteredBuses = new ArrayList<>();
+                    for (BusDTO bus : availableBuses) {
+                        if (bus.getBusID() != scheduleToEdit.getBusID()) {
+                            filteredBuses.add(bus);
+                        }
+                    }
+                    // Cập nhật lại danh sách xe sẵn sàng (đã loại bỏ xe đang gặp sự cố)
+                    request.setAttribute("avaiBusList", filteredBuses);
+
+                } else {
+                    // Nếu lịch trình không gặp sự cố, sử dụng danh sách gốc
+                    request.setAttribute("avaiBusList", availableBuses);
+                }
+
+                // Lấy dữ liệu khác cần thiết
+                getAllRoute(request, response);
+                getAvaiStaffByRole(request, response, "Tài xế");
+                getAvaiStaffByRole(request, response, "Tiếp viên");
+
+                // Hiển thị lại danh sách lịch trình
+                handleScheduleShowingAdmin(request, response);
+            } else {
+                request.setAttribute("displayMessage", "Không tìm thấy lịch trình với ID: " + scheduleID);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in prepareUpdateSchedule: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("displayMessage", "Lỗi khi chuẩn bị cập nhật: " + e.getMessage());
+        }
+
+        return url;
+    }
+
+    private String handleUpdateSchedule(HttpServletRequest request, HttpServletResponse response) {
+        String url = SCHEDULE_ADMIN;
+
+        if (!AuthUtils.isLoggedIn(request)) {
+            return LOGIN_PAGE;
+        }
+        if (!AuthUtils.isAdmin(request)) {
+            return WELCOME_PAGE;
+        }
+
+        try {
+            int scheduleID = Integer.parseInt(request.getParameter("scheduleID"));
+            int busID = Integer.parseInt(request.getParameter("busID"));
+            int oldBusID = Integer.parseInt(request.getParameter("oldB và usID"));
+            String status = request.getParameter("status");
+
+            System.out.println("Updating schedule ID: " + scheduleID);
+            System.out.println("New bus ID: " + busID);
+            System.out.println("Old bus ID: " + oldBusID);
+            System.out.println("New status: " + status);
+
+            // Lấy lịch trình hiện tại để giữ lại các trường không thay đổi
+            ScheduleDTO currentSchedule = sdao.ScheduleById(scheduleID);
+            if (currentSchedule == null) {
+                request.setAttribute("displayMessage", "Không tìm thấy lịch trình!");
+                handleScheduleShowingAdmin(request, response);
+                return url;
+            }
+
+            // Chỉ cập nhật trường arrival time nếu có
+            String arrivalTimeStr = request.getParameter("arrivalTime");
+            if (arrivalTimeStr != null && !arrivalTimeStr.isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                Date arrivalDate = sdf.parse(arrivalTimeStr);
+                currentSchedule.setArrivalTime(new Timestamp(arrivalDate.getTime()));
+            }
+
+            // Cập nhật xe bus và trạng thái
+            currentSchedule.setBusID(busID);
+            currentSchedule.setStatus(status);
+
+            // 1. Cập nhật lịch trình
+            boolean scheduleUpdated = sdao.updateSchedule(currentSchedule);
+            System.out.println("Schedule update result: " + scheduleUpdated);
+
+            // 2. Nếu thay đổi xe, cập nhật trạng thái xe
+            boolean busesUpdated = true;
+            if (oldBusID != busID) {
+                // Cập nhật xe cũ thành "Bảo trì"
+                boolean oldBusUpdated = bdao.updateBusStatus(oldBusID, "Bảo trì");
+
+                // Cập nhật xe mới thành "Bận"
+                boolean newBusUpdated = bdao.updateBusStatus(busID, "Bận");
+
+                busesUpdated = oldBusUpdated && newBusUpdated;
+            }
+
+            if (scheduleUpdated && busesUpdated) {
+                request.setAttribute("displayMessage", "Cập nhật lịch trình và điều động xe thành công!");
+            } else {
+                request.setAttribute("displayMessage", "Cập nhật thất bại, đã rollback các thay đổi!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error in handleUpdateSchedule: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("displayMessage", "Lỗi khi cập nhật lịch trình: " + e.getMessage());
+        }
+
+        handleScheduleShowingAdmin(request, response);
+        return url;
+    }
+    /// HẾT PHẦN CODE ADMIN ================================================================================================///
+
     private List<LocationDTO> getAllLocation(HttpServletRequest request, HttpServletResponse response) {
         List<LocationDTO> locationList = new ArrayList<>();
 
@@ -328,7 +515,7 @@ public class ScheduleController extends HttpServlet {
 
     private String handleDefaultScheduleDisplay(HttpServletRequest request, HttpServletResponse response) {
         String url = SCHEDULE_PAGE;
-        
+
         // cập nhật trạng thái lịch trình sau khi quá thời gian đã được đặt trước đó
         sdao.autoUpdateScheduleStatus();
         List<ScheduleDTO> searchList = null;

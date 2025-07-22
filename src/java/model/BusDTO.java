@@ -38,6 +38,16 @@ public class BusDTO {
         this.Status = Status;
     }
 
+    public BusDTO(int BusID, String BusNumber, String BusName, int BusTypeID, String Description, String Status, String BusTypeName) {
+        this.BusID = BusID;
+        this.BusNumber = BusNumber;
+        this.BusName = BusName;
+        this.BusTypeID = BusTypeID;
+        this.Description = Description;
+        this.Status = Status;
+        this.BusTypeName = BusTypeName;
+    }
+
 
 
     public int getBusID() {

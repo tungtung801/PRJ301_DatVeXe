@@ -165,7 +165,7 @@ public class ScheduleDAO {
                 + "WHERE r.departure LIKE ? "
                 + "AND r.destination LIKE ? "
                 + "AND CONVERT(DATE, s.[DepartureTime]) = ? " // Convert để chỉ lấy phần ngày-thngs-năm thày vig lấy cả phần giờ-phút-giây
-                + "AND Status != 'Hoàn thành' "
+                + "AND s.Status != 'Hoàn thành' "
                 + "ORDER BY s.[DepartureTime] ASC";
 
         try {
@@ -230,7 +230,7 @@ public class ScheduleDAO {
                 + "JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
                 + "WHERE r.departure LIKE ? "
                 + "AND CONVERT(DATE, s.[DepartureTime]) = ? " // Convert để chỉ lấy phần ngày-thngs-năm thày vig lấy cả phần giờ-phút-giây
-                + "AND Status != 'Hoàn thành' "
+                + "AND s.Status != 'Hoàn thành' "
                 + "ORDER BY s.[DepartureTime] ASC";
 
         try {
@@ -293,7 +293,7 @@ public class ScheduleDAO {
                 + "JOIN [dbo].[Buses] b ON s.BusID = b.BusID "
                 + "JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID "
                 + "WHERE CONVERT(DATE, s.[DepartureTime]) >= ? " // Convert để chỉ lấy phần ngày-thngs-năm thày vig lấy cả phần giờ-phút-giây
-                + "AND Status != 'Hoàn thành' "
+                + "AND s.Status != 'Hoàn thành' "
                 + "ORDER BY s.[DepartureTime] ASC";
 
         try {
@@ -431,36 +431,151 @@ public class ScheduleDAO {
     }
 
     public void autoUpdateScheduleStatus() {
-    String updateScheduleSQL = "UPDATE Schedules SET Status = N'Hoàn thành' WHERE DepartureTime < GETDATE() AND Status = N'Lên lịch'";
-    String updateBusSQL = "UPDATE Buses SET Status = N'Sẵn sàng' " +
-                          "WHERE BusID IN (SELECT BusID FROM Schedules WHERE DepartureTime < GETDATE() AND Status = N'Hoàn thành')";
-    String updateStaffSQL = "UPDATE Employee SET status = N'Nhàn rỗi' " +
-                        "WHERE emp_id IN (SELECT emp_id FROM Schedules WHERE DepartureTime < GETDATE() AND Status = N'Hoàn thành')";
+        String updateScheduleSQL = "UPDATE Schedules SET Status = N'Hoàn thành' WHERE ArrivalTime < GETDATE() AND Status = N'Đang phục vụ'";
+        String updateSchedule2SQL = "UPDATE Schedules SET Status = N'Đang phục vụ' WHERE DepartureTime < GETDATE() AND Status = N'Lên lịch'";
+        String updateBusSQL = "UPDATE Buses SET Status = N'Sẵn sàng' "
+                + "WHERE BusID IN (SELECT BusID FROM Schedules WHERE DepartureTime < GETDATE() AND Status = N'Hoàn thành')";
+        String updateStaffSQL = "UPDATE Employee SET status = N'Nhàn rỗi' "
+                + "WHERE emp_id IN (SELECT emp_id FROM Schedules WHERE DepartureTime < GETDATE() AND Status = N'Hoàn thành')";
 
-    try (Connection conn = DBUtils.getConnection()) {
-        conn.setAutoCommit(false); // Bắt đầu transaction
+        try ( Connection conn = DBUtils.getConnection()) {
+            conn.setAutoCommit(false); // Bắt đầu transaction
 
-        // 1. Update schedule
-        try (PreparedStatement ps1 = conn.prepareStatement(updateScheduleSQL)) {
-            int rowsUpdated = ps1.executeUpdate();
-            System.out.println("Schedules updated to 'Hoàn thành': " + rowsUpdated);
+            // 1. Update schedule
+            try ( PreparedStatement ps1 = conn.prepareStatement(updateScheduleSQL)) {
+                int rowsUpdated = ps1.executeUpdate();
+                System.out.println("Schedules updated to 'Hoàn thành': " + rowsUpdated);
+            }
+
+            try ( PreparedStatement ps2 = conn.prepareStatement(updateSchedule2SQL)) {
+                int rowsUpdated = ps2.executeUpdate();
+                System.out.println("Schedules updated to 'Đang phục vụ': " + rowsUpdated);
+            }
+
+            // 2. Update bus
+            try ( PreparedStatement ps3 = conn.prepareStatement(updateBusSQL)) {
+                int busUpdated = ps3.executeUpdate();
+                System.out.println("Buses updated to 'Sẵn sàng': " + busUpdated);
+            }
+
+            // 3. Cập nhật trạng thái nhân viên
+            try ( PreparedStatement ps4 = conn.prepareStatement(updateStaffSQL)) {
+                int staffUpdated = ps4.executeUpdate();
+                System.out.println("Staffs updated to 'Nhàn rỗi': " + staffUpdated);
+            }
+            conn.commit(); // Hoàn tất transaction
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        // 2. Update bus
-        try (PreparedStatement ps2 = conn.prepareStatement(updateBusSQL)) {
-            int busUpdated = ps2.executeUpdate();
-            System.out.println("Buses updated to 'Sẵn sàng': " + busUpdated);
+    public boolean updateSchedule(ScheduleDTO schedule) {
+        boolean isUpdate = false;
+        String sql = "UPDATE Schedules SET busID = ?, driverID = ?, attendantID = ?, price = ?, status = ? WHERE scheduleID = ?";
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, schedule.getBusID());
+            ps.setInt(2, schedule.getDriverID());
+            ps.setInt(3, schedule.getAttendantID());
+            ps.setDouble(4, schedule.getPrice());
+            ps.setString(5, schedule.getStatus());
+            ps.setInt(6, schedule.getScheduleID());
+            int rowsAffected = ps.executeUpdate();
+            isUpdate = rowsAffected > 0;
+        } catch (Exception e) {
+            System.out.println("Error in updateSchedule: " + e.getMessage());
+        } finally {
+            DBUtils.closeResources(conn, ps, rs);
         }
+        return isUpdate;
+    }
 
-        // 3. Cập nhật trạng thái nhân viên
-        try (PreparedStatement ps3 = conn.prepareStatement(updateStaffSQL)) {
-            int staffUpdated = ps3.executeUpdate();
-            System.out.println("Staffs updated to 'Nhàn rỗi': " + staffUpdated);
+    // NHÂN VIÊN ============= //
+    public List<ScheduleDTO> getEmployeeSchedule(String name) {
+        String sql = "SELECT \n"
+                + "    s.ScheduleID,\n"
+                + "    s.RouteID,\n"
+                + "    s.BusID,\n"
+                + "    s.DepartureTime,\n"
+                + "    s.ArrivalTime,\n"
+                + "    s.DriverID,\n"
+                + "    s.AttendantID,\n"
+                + "    s.Price,\n"
+                + "    s.Status,\n"
+                + "    r.departure,\n"
+                + "    r.destination,\n"
+                + "    b.BusNumber,\n"
+                + "    b.BusName,\n"
+                + "    bt.TypeName AS BusTypeName,\n"
+                + "    driver.emp_name AS DriverName,\n"
+                + "    attendant.emp_name AS AttendantName,\n"
+                + "    (SELECT COUNT(SS.ScheduleSeatID) FROM [dbo].[ScheduleSeats] SS WHERE SS.ScheduleID = s.ScheduleID AND SS.Status = N'Bận') AS AvailableSeats,\n"
+                + "    (SELECT COUNT(SS.ScheduleSeatID) FROM [dbo].[ScheduleSeats] SS WHERE SS.ScheduleID = s.ScheduleID) AS TotalSeats\n"
+                + "FROM [dbo].[Schedules] s\n"
+                + "LEFT JOIN [dbo].[Route] r ON s.RouteID = r.route_id\n"
+                + "LEFT JOIN [dbo].[Buses] b ON s.BusID = b.BusID\n"
+                + "LEFT JOIN [dbo].[BusTypes] bt ON b.BusTypeID = bt.BusTypeID\n"
+                + "LEFT JOIN [dbo].[Employee] driver ON s.DriverID = driver.emp_id\n"
+                + "LEFT JOIN [dbo].[Employee] attendant ON s.AttendantID = attendant.emp_id\n"
+                + "WHERE driver.emp_name LIKE ? \n"
+                + "   OR attendant.emp_name LIKE ?\n"
+                + "ORDER BY s.DepartureTime ASC";
+
+        List<ScheduleDTO> list = new ArrayList<>();
+        ScheduleDTO schedule = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + name + "%");
+            ps.setString(2, "%" + name + "%");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                schedule = new ScheduleDTO();
+                // Set core schedule properties
+                schedule.setScheduleID(rs.getInt("ScheduleID"));
+                schedule.setRouteID(rs.getInt("RouteID"));
+                schedule.setBusID(rs.getInt("BusID"));
+                schedule.setDepartureTime(rs.getTimestamp("DepartureTime"));
+                schedule.setArrivalTime(rs.getTimestamp("ArrivalTime"));
+                schedule.setDriverID(rs.getInt("DriverID"));
+                schedule.setAttendantID(rs.getInt("AttendantID"));
+                schedule.setPrice(rs.getDouble("Price"));
+                schedule.setStatus(rs.getString("Status"));
+
+                // Set additional fields
+                schedule.setDeparture(rs.getString("departure"));
+                schedule.setDestination(rs.getString("destination"));
+                schedule.setBusNumber(rs.getString("BusNumber"));
+                schedule.setBusName(rs.getString("BusName"));
+                schedule.setBusTypeName(rs.getString("BusTypeName"));
+                schedule.setDriverName(rs.getString("DriverName"));
+                schedule.setAttendantName(rs.getString("AttendantName"));
+                schedule.setAvailableSeats(rs.getInt("AvailableSeats"));
+                schedule.setTotalSeats(rs.getInt("TotalSeats"));
+
+                list.add(schedule);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
+        } finally {
+            DBUtils.closeResources(conn, ps, rs);
         }
-        conn.commit(); // Hoàn tất transaction
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
+    }
+
+    // test 
+    public static void main(String[] args) {
+        ScheduleDAO sdao = new ScheduleDAO();
+        List<ScheduleDTO> list = sdao.getEmployeeSchedule("Huỳnh Anh Tú");
+        if (list.isEmpty()) {
+            System.out.println("false");
+        } else {
+            System.out.println("true");
+        }
     }
 }
 
-}
