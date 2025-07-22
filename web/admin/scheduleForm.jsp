@@ -71,6 +71,11 @@
                                                     <td>Tiếp Viên</td>
                                                     <td>Giá Vé</td>
                                                     <td>Trạng Thái</td>
+                                                    <c:forEach var="s" items="${requestScope.scheduleDisplayList}">
+                                                        <c:if test="${s.status eq 'Sự cố'}">
+                                                            <td>Hành đông</td>
+                                                        </c:if>
+                                                    </c:forEach>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -86,7 +91,28 @@
                                                         <td>${s.driverName}</td>
                                                         <td>${s.attendantName}</td>
                                                         <td><fmt:formatNumber value="${s.price}" maxFractionDigits="0"/>đ</td>
-                                                        <td>${s.status}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${s.status eq 'Sự cố'}">
+                                                                    <p style="color: red; font-weight: bold">${s.status}</p> 
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    ${s.status}
+                                                                </c:otherwise>
+                                                            </c:choose>  
+                                                        </td>
+                                                        <c:if test="${s.status eq 'Sự cố'}">
+                                                            <td>
+                                                                <form action="ScheduleController" method="post" style="display:inline;">
+                                                                    <input type="hidden" name="action" value="prepareUpdateSchedule">
+                                                                    <input type="hidden" name="scheduleID" value="${s.scheduleID}">
+                                                                    <!-- Không cần gửi oldBusNumber nữa vì chúng ta sẽ lấy từ database -->
+                                                                    <button type="submit" class="btn-update">Cập nhật/Điều động</button>
+                                                                </form>
+                                                            </td>
+                                                        </c:if>
+
+
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
@@ -94,87 +120,177 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <p>Không có phương tiện nào trong danh sách</p>
+                                    <p>Không có lịch trình nào trong danh sách !</p>
                                 </c:otherwise>
                             </c:choose>
                         </div>
-                        <!--================================= THÊM LỊCH TRÌNH MỚI ====================================-->
 
+
+                        <!--================================= THÊM/CẬP NHẬT LỊCH TRÌNH ====================================-->
                         <div class="add">
-                            <h3>Thêm lịch trình mới</h3>
+                            <h3>${isEdit ? 'Cập nhật lịch trình' : 'Thêm lịch trình mới'}</h3>
                             <div class="form-container">
 
                                 <div class="message">
-                                    <c:if test="${not empty addMsg}">
+                                    <c:if test="${not empty addMsg and not isEdit}">
                                         ${addMsg}
+                                    </c:if>
+                                    <c:if test="${not empty displayMessage and isEdit}">
+                                        ${displayMessage}
                                     </c:if>
                                 </div>
 
                                 <form action="ScheduleController" method="post">
-                                    <input type="hidden" name="action" value="addSchedule">
+                                    <input type="hidden" name="action" value="${isEdit ? 'updateSchedule' : 'addSchedule'}">
+                                    <c:if test="${isEdit}">
+                                        <input type="hidden" name="scheduleID" value="${scheduleToEdit.scheduleID}">
+                                        <input type="hidden" name="oldBusID" value="${scheduleToEdit.busID}">
+                                    </c:if>
 
-                                    <!-- Tuyến đường -->
+                                    <!-- Tuyến đường - readonly khi edit -->
                                     <div class="form-group">
-                                        Chọn 1 tuyến đường:
-                                        <select name="routeID">
-                                            <c:forEach var="r" items="${avaiRouteList}">
-                                                <option value="${r.route_id}">${r.departure} - ${r.destination}</option>
-                                            </c:forEach>
-                                        </select>
+                                        Tuyến đường:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <c:forEach var="r" items="${avaiRouteList}">
+                                                    <c:if test="${r.route_id == scheduleToEdit.routeID}">
+                                                        <input type="text" value="${r.departure} - ${r.destination}" readonly>
+                                                        <input type="hidden" name="routeID" value="${scheduleToEdit.routeID}">
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="routeID">
+                                                    <c:forEach var="r" items="${avaiRouteList}">
+                                                        <option value="${r.route_id}">${r.departure} - ${r.destination}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
-                                    <!-- Phương tiện -->
+                                    <!-- Phương tiện - có thể thay đổi khi edit -->
                                     <div class="form-group">
-                                        Chọn phương tiện phục vụ:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                Chọn phương tiện thay thế:
+                                            </c:when>
+                                            <c:otherwise>
+                                                Chọn phương tiện phục vụ:
+                                            </c:otherwise>
+                                        </c:choose>
                                         <select name="busID">
                                             <c:forEach var="avb" items="${avaiBusList}">
-                                                <option value="${avb.busID}">${avb.busNumber} - ${avb.busName}</option>
+                                                <option value="${avb.busID}" ${isEdit && avb.busID == scheduleToEdit.busID ? 'selected' : ''}>
+                                                    ${avb.busNumber} - ${avb.busName}
+                                                </option>
                                             </c:forEach>
                                         </select>
                                     </div>
 
-                                    <!-- Giờ xuất bến -->
+                                    <!-- Giờ xuất bến - readonly khi edit -->
                                     <div class="form-group">
-                                        Nhập thời gian xuất bến:
-                                        <input type="datetime-local" id="travelDate" name="departureTime" value="${departureTime}">
+                                        Thời gian xuất bến:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <fmt:formatDate value="${scheduleToEdit.departureTime}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedDepartureTime"/>
+                                                <input type="datetime-local" name="departureTime" value="${formattedDepartureTime}" readonly>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="datetime-local" id="travelDate" name="departureTime" value="${departureTime}">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
-                                    <!-- Giờ cập bến -->
+                                    <!-- Giờ cập bến - có thể thay đổi khi edit -->
                                     <div class="form-group">
-                                        Nhập thời gian cập bến:
-                                        <input type="datetime-local" id="travelDate" name="arrivalTime" value="${arrivalTime}">
+                                        Thời gian cập bến:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <fmt:formatDate value="${scheduleToEdit.arrivalTime}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedArrivalTime"/>
+                                                <input type="datetime-local" name="arrivalTime" value="${formattedArrivalTime}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="datetime-local" id="arrivalDate" name="arrivalTime" value="${arrivalTime}">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
-                                    <!-- Tài xế -->
+                                    <!-- Tài xế - readonly khi edit -->
                                     <div class="form-group">
-                                        Lựa chọn tài xế:
-                                        <select name="driverID">
-                                            <c:forEach var="d" items="${driverList}">
-                                                <option value="${d.emp_id}">${d.emp_name}</option>
-                                            </c:forEach>
-                                        </select>
+                                        Tài xế:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <c:forEach var="d" items="${driverList}">
+                                                    <c:if test="${d.emp_id == scheduleToEdit.driverID}">
+                                                        <input type="text" value="${d.emp_name}" readonly>
+                                                        <input type="hidden" name="driverID" value="${scheduleToEdit.driverID}">
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="driverID">
+                                                    <c:forEach var="d" items="${driverList}">
+                                                        <option value="${d.emp_id}">${d.emp_name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
-                                    <!-- Tiếp viên -->
+                                    <!-- Tiếp viên - readonly khi edit -->
                                     <div class="form-group">
-                                        Lựa chọn tiếp viên:
-                                        <select name="attendantID">
-                                            <c:forEach var="d" items="${attendantList}">
-                                                <option value="${d.emp_id}">${d.emp_name}</option>
-                                            </c:forEach>
-                                        </select>
-
+                                        Tiếp viên:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <c:forEach var="d" items="${attendantList}">
+                                                    <c:if test="${d.emp_id == scheduleToEdit.attendantID}">
+                                                        <input type="text" value="${d.emp_name}" readonly>
+                                                        <input type="hidden" name="attendantID" value="${scheduleToEdit.attendantID}">
+                                                    </c:if>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="attendantID">
+                                                    <c:forEach var="d" items="${attendantList}">
+                                                        <option value="${d.emp_id}">${d.emp_name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
 
-                                    <!-- Giá tiền -->
+                                    <!-- Giá tiền - readonly khi edit -->
                                     <div class="form-group">
-                                        Nhập giá cho 1 vé:
-                                        <input type="number" name="price">
+                                        Giá vé:
+                                        <c:choose>
+                                            <c:when test="${isEdit}">
+                                                <input type="number" name="price" value="${scheduleToEdit.price}" readonly>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="number" name="price">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
+
+                                    <!-- Trạng thái (chỉ hiển thị khi cập nhật) -->
+                                    <c:if test="${isEdit}">
+                                        <div class="form-group">
+                                            Trạng thái:
+                                            <select name="status">
+                                                <option value="Sự cố" ${scheduleToEdit.status eq 'Sự cố' ? 'selected' : ''}>Sự cố</option>
+                                                <option value="Đang phục vụ" ${scheduleToEdit.status eq 'Đang phục vụ' ? 'selected' : ''}>Đang phục vụ</option>
+                                                <option value="Lên lịch" ${scheduleToEdit.status eq 'Lên lịch' ? 'selected' : ''}>Lên lịch</option>
+                                            </select>
+                                        </div>
+                                    </c:if>
 
                                     <!-- Button submit -->
                                     <div class="form-group">
-                                        <button type="submit">Thêm lịch trình</button>
+                                        <button type="submit">${isEdit ? 'Cập nhật lịch trình' : 'Thêm lịch trình'}</button>
+                                        <c:if test="${isEdit}">
+                                            <a href="ScheduleController?action=scheduleManage" class="btn-cancel" style="margin-left: 10px; padding: 8px 16px; text-decoration: none; background-color: #f44336; color: white; border-radius: 4px;">Hủy</a>
+                                        </c:if>
                                     </div>
                                 </form>
                             </div>

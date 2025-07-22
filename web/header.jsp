@@ -5,6 +5,8 @@
 <c:set var="loggedInUser" value="${sessionScope.user}"/>
 <c:set var="isLoggedIn" value="${not empty loggedInUser}"/>
 <c:set var="isAdmin" value="${loggedInUser.role eq 'admin'}"/>
+<c:set var="isNhanVien" value="${loggedInUser.role eq 'tx' or loggedInUser.role eq 'tv'}"/>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="assets/css/styleHeader.css"/>
 
@@ -40,5 +42,12 @@
             </c:otherwise>
         </c:choose>
     </div>
+
+    <c:if test="${isLoggedIn and (isNhanVien or isAdmin)}">
+        <form action="ScheduleController" method="post" class="staff-search-form">
+            <input type="hidden" name="action" value="gotosearchNV"/>
+            <input type="submit" value="Tìm kiếm dành cho Nhân Viên" class="staff-search-button"/>
+        </form>
+    </c:if>
 </header>
 <div class="header-spacer"></div>
