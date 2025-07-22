@@ -1,0 +1,124 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 14, 2025, 7:48:38 PM
+    Author     : Tung Nguyen
+*/
+/* ===================== RESET ===================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* ===================== MAIN LAYOUT ===================== */
+html, body {
+    height: 100%;
+}
+
+body {
+    background-image: url('../images/login-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1; /* Chiếm phần còn lại */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.forgot-panel {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+
+.forgot-panel h2 {
+    margin-bottom: 12px;
+    font-size: 1.6rem;
+    color: #01011B;
+}
+
+.forgot-panel p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.forgot-form input[type="text"],
+.forgot-form input[type="email"],
+.forgot-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.forgot-form input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #00AE72;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.forgot-form input[type="submit"]:hover {
+    background-color: #006241;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    color: #006241;
+}
+
+.back-link:hover {
+    color: #003f2e;
+}
+
+/* ===================== MESSAGE ===================== */
+.message-error {
+    background-color: #fdecea;
+    border: 1px solid #f5c2c7;
+    color: #c92a2a;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+.message-success {
+    background-color: #e6ffed;
+    border: 1px solid #a6f4c5;
+    color: #037d50;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+

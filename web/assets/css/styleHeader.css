@@ -1,0 +1,351 @@
+/* Header Styles */
+*{
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #01011B;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    width: 100%;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    height: 94px;
+}
+
+/* Logo Styles */
+.logo {
+    flex-shrink: 0;
+}
+
+.logo a {
+    display: block;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 70px;
+    width: 220px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+/* Navigation Container - SỬA PHẦN NÀY */
+.nav-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end; /* Đẩy về phía bên phải */
+    margin-right: 20px; /* Khoảng cách với nav-user */
+}
+
+.nav-items {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+}
+
+.nav-items li {
+    margin: 0;
+}
+
+.nav-items li a {
+    display: block;
+    padding: 12px 20px;
+    color: #F8F8F8;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-items li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.nav-items li a:hover::before {
+    left: 100%;
+}
+
+.nav-items li a:hover {
+    background-color: #6C7B8B;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Navigation Separator - SỬA PHẦN NÀY */
+.nav-span {
+    color: #CED4DA;
+    font-size: 24px;
+    margin: 0 15px;
+    opacity: 0.5;
+    flex-shrink: 0; /* Không cho phép co lại */
+}
+
+/* User Navigation */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.nav-user span {
+    color: #F8F8F8;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-user span i {
+    font-size: 16px;
+}
+
+.nav-user a {
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    color: #F8F8F8;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-user a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.nav-user a:hover::before {
+    left: 100%;
+}
+
+.nav-user a:hover {
+    background-color: #6C7B8B;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.nav-user-accent {
+    background-color: #00AE72 !important;
+    color: #F8F8F8 !important;
+}
+
+.nav-user-accent:hover {
+    background-color: #006241 !important;
+}
+
+/* Logout Button */
+.nav-user a[style*="background-color: red"] {
+    background-color: #dc3545 !important;
+}
+
+.nav-user a[style*="background-color: red"]:hover {
+    background-color: #c82333 !important;
+}
+
+/* Admin User Styling */
+.nav-user span[style*="color: #ff5722"] {
+    background: linear-gradient(135deg, rgba(255, 87, 34, 0.2), rgba(255, 87, 34, 0.1));
+    border: 1px solid rgba(255, 87, 34, 0.3);
+}
+
+/* Regular User Styling */
+.nav-user span[style*="color: #00AE72"] {
+    background: linear-gradient(135deg, rgba(0, 174, 114, 0.2), rgba(0, 174, 114, 0.1));
+    border: 1px solid rgba(0, 174, 114, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    header {
+        padding: 12px 15px;
+    }
+    
+    .logo img {
+        width: 180px;
+        height: 60px;
+    }
+    
+    .nav-items {
+        gap: 5px;
+    }
+    
+    .nav-items li a {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .nav-user {
+        gap: 8px;
+    }
+    
+    .nav-user a {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 94px;
+        padding: 10px;
+    }
+    
+    .logo {
+        order: 1;
+    }
+    
+    .nav-container {
+        order: 2;
+        margin-right: 10px;
+    }
+    
+    .nav-span {
+        order: 3;
+        margin: 0 10px;
+    }
+    
+    .nav-user {
+        order: 4;
+    }
+    
+    .nav-items {
+        gap: 5px;
+    }
+    
+    .nav-items li a {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .nav-user span {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .nav-user a {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        width: 150px;
+        height: 50px;
+    }
+    
+    .nav-items li a {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .nav-user {
+        gap: 5px;
+    }
+    
+    .nav-user span {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .nav-user a {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .nav-span {
+        font-size: 20px;
+        margin: 0 8px;
+    }
+}
+
+/* Animation for smooth transitions */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+header {
+    animation: slideDown 0.5s ease-out;
+}
+
+/* Hover effects for better UX */
+.nav-items li a,
+.nav-user a {
+    position: relative;
+}
+
+.nav-items li a::after,
+.nav-user a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00AE72, #2ECC71);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-items li a:hover::after,
+.nav-user a:hover::after {
+    width: 80%;
+}
+
+/* Focus states for accessibility */
+.nav-items li a:focus,
+.nav-user a:focus {
+    outline: 2px solid #00AE72;
+    outline-offset: 2px;
+}
+.header-spacer {
+    height: 94px; /* đúng bằng chiều cao header */
+}

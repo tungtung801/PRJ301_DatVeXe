@@ -1,0 +1,184 @@
+/* Khai báo biến CSS (Custom Properties) */
+:root {
+    /* Màu sắc */
+    --primary-color: #007bff; /* Xanh dương chủ đạo */
+    --primary-dark-color: #0056b3; /* Xanh đậm hơn cho tiêu đề */
+    --accent-color: #28a745; /* Màu nhấn cho các thông tin quan trọng (ví dụ: tổng tiền) */
+    --departure-destination-color: #dc3545; /* Màu đỏ cho tuyến */
+    --subtitle-color: #343a40; /* Màu xám đậm cho các đề mục con (Tuyến, Thời gian...) */
+    --background-light: #f0f2f5;
+    --background-white: #ffffff;
+    --border-color: #e9ecef;
+    --text-color: #333;
+    --text-muted: #6c757d; /* Màu xám cho các thông tin phụ */
+    --box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Bóng đổ cho các box chính */
+}
+
+/* --- GLOBAL STYLES --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-dark-color);
+    margin: 30px auto 20px auto; /* Giảm margin bottom để gần đường kẻ */
+    font-size: 2.5em;
+    font-weight: 600;
+    max-width: fit-content; /* Để đường kẻ chỉ dài bằng text */
+    position: relative; /* Để dùng pseudo-element cho đường kẻ */
+}
+
+h1::after { /* Đường kẻ dưới tiêu đề chính */
+    content: '';
+    display: block;
+    width: 60%; /* Chiều rộng đường kẻ */
+    height: 3px;
+    background-color: var(--primary-color);
+    margin: 10px auto 0 auto; /* Khoảng cách từ tiêu đề và căn giữa */
+    border-radius: 5px;
+}
+
+
+h3 {
+    color: var(--primary-color);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+/* --- MAIN CONTENT LAYOUT --- */
+.main-content {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép các cột xuống dòng trên màn hình nhỏ */
+    justify-content: center;
+    gap: 30px; /* Khoảng cách giữa các khối thông tin */
+    padding: 20px;
+    max-width: 1200px; /* Giới hạn chiều rộng tối đa */
+    margin: 0 auto; /* Căn giữa trang */
+}
+
+/* --- INFO SECTIONS (USER, BOOKING, TRIP) --- */
+.user, .booking-info {
+    flex: 1 1 45%; /* Chiếm khoảng 45% chiều rộng, linh hoạt co giãn */
+    min-width: 300px; /* Chiều rộng tối thiểu để không bị quá hẹp */
+    background-color: var(--background-white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Điều chỉnh lại để chữ dính sát hai bên lề */
+.user p, .booking-info p {
+    display: flex; /* Biến mỗi dòng p thành flex container */
+    justify-content: space-between; /* Đẩy nội dung ra hai bên */
+    align-items: baseline; /* Căn chỉnh theo baseline của text */
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+/* Các đề mục con (strong trong p) */
+.user p strong,
+.booking-info p strong {
+    color: var(--subtitle-color); /* Màu xám đậm */
+    font-weight: bold; /* In đậm */
+    flex-shrink: 0; /* Không cho phép label co lại */
+    margin-right: 10px; /* Khoảng cách giữa label và value */
+}
+
+/* Thông tin tuyến (departure - destination) */
+.booking-info .route-info {
+    color: var(--departure-destination-color); /* Màu đỏ */
+    font-weight: bold; /* In đậm */
+    text-align: right; /* Căn phải cho thông tin tuyến */
+    flex-grow: 1; /* Cho phép nó mở rộng để đẩy label sang trái */
+}
+
+/* Căn chỉnh lại cho thông tin ghế ngồi */
+.seat-numbers-display {
+    display: flex; /* Biến nó thành flex container */
+    justify-content: space-between; /* Đẩy nội dung ra hai bên */
+    align-items: baseline;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+.seat-numbers-display strong {
+    color: var(--subtitle-color); /* Đồng bộ màu với các label khác */
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+.seat-numbers-display span { /* Để style cho các số ghế */
+    text-align: right;
+    flex-grow: 1;
+}
+
+
+/* SPECIFIC HIGHLIGHTS */
+.booking-info p.total-amount-row { /* Tạo class riêng cho dòng tổng tiền để dễ style */
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--accent-color); /* Màu xanh lá cho tổng tiền */
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border-color);
+    /* Các thuộc tính flex đã được định nghĩa ở .user p, .booking-info p */
+}
+.booking-info p.total-amount-row strong {
+    color: var(--primary-dark-color); /* Màu đậm hơn cho label Tổng thành tiền */
+}
+
+
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+        margin: 20px 0;
+    }
+    h1::after {
+        width: 80%; /* Đường kẻ rộng hơn trên mobile */
+    }
+
+    .main-content {
+        flex-direction: column; /* Xếp chồng các khối thông tin */
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .user, .booking-info {
+        flex: 1 1 100%; /* Mỗi khối chiếm toàn bộ chiều rộng */
+        min-width: unset; /* Bỏ giới hạn chiều rộng tối thiểu */
+        padding: 20px;
+    }
+
+    h3 {
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .user p, .booking-info p {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .user p, .booking-info p {
+        font-size: 0.95em;
+    }
+}

@@ -1,0 +1,255 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 13, 2025, 10:41:52 AM
+    Author     : Tung Nguyen
+*/
+/* Admin Dashboard - Shared CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-actions {
+    padding: 0 10px;
+}
+
+.admin-actions form {
+    margin-bottom: 8px;
+}
+
+.admin-actions input[type="submit"] {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-actions input[type="submit"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.admin-actions input[type="submit"]:active {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.admin-actions input[type="submit"].active {
+    background: rgba(255, 255, 255, 0.25);
+    font-weight: 600;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 250px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+
+.main {
+    padding: 0 30px;
+}
+
+.message {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.message:not(:empty) {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.form-row {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-row .add {
+  flex: 1;
+  min-width: 300px;
+}
+
+.add {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    border: 1px solid #e9ecef;
+}
+
+.add form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.add input[type="text"], .add textarea, .add select {
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+.add input[type="text"]:focus, .add textarea:focus, .add select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.add input[type="submit"] {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.err {
+    color: #dc3545;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.show {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+thead td {
+    padding: 15px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+tbody td {
+    padding: 15px 20px;
+    color: #495057;
+    font-size: 14px;
+}
+
+.show p {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+    font-size: 16px;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .side-bar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    .content-header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .content-header h1 {
+        font-size: 20px;
+    }
+
+    .main {
+        padding: 0 20px;
+    }
+
+    .add form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add input[type="text"] {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .side-bar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .side-bar.active {
+        transform: translateX(0);
+    }
+}
+
+

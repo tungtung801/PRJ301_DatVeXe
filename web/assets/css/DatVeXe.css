@@ -1,0 +1,303 @@
+
+/* THE HEADER*/
+:root {
+    /*background*/
+    --bg-primary: #ffffff;
+    --bg-secondary: #01011B;
+
+    /*text, tittle*/
+    --text-primary: #F8F8F8; /*(Off-White)*/
+    --text-seconday: #CED4DA; /*(Light Gray)*/
+
+    /* accent (màu nhấn)*/
+    --ac-primary: #00AE72; /*(Golden Yellow)*/
+    --ac-hover: #006241; /*(Dark Goldenrod)*/
+    --ac-secondary: #2ECC71; /*(Slate Blue)*/
+    --btn-hover: #6C7B8B;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    font-size: 18px;
+    box-sizing: border-box;
+}
+/*
+
+
+/*============================================================================*/
+/* Popular trips */
+.popular-trip-section {
+    padding: 80px 0; /* Khoảng cách trên dưới */
+    background-color: #fff; /* Nền trắng */
+    text-align: center;
+}
+
+.popular-trip-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 50px; /* Khoảng cách dưới tiêu đề */
+    color: #01011B;
+}
+
+.popular-trip-row {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép các item xuống dòng */
+    justify-content: center; /* Căn giữa các item */
+    gap: 30px; /* Khoảng cách giữa các trip-item */
+}
+
+.trip-item {
+    display: flex; /* Dùng flexbox để chia 2 cột hình ảnh và chi tiết */
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    overflow: hidden; /* Đảm bảo nội dung không tràn ra ngoài bo góc */
+    max-width: 900px; /* Chiều rộng tối đa cho mỗi item */
+    margin: 0 auto; /* Căn giữa từng item */
+    text-align: left; /* Căn chữ về trái trong từng item */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.trip-item:hover {
+    transform: translateY(-8px); /* Bay lên nhẹ khi hover */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Bóng đổ đậm hơn khi hover */
+}
+
+.trip-image {
+    flex: 1; /* Chiếm 1 phần */
+    min-width: 250px; /* Đảm bảo hình ảnh có chiều rộng tối thiểu */
+    max-width: 33.33%; /* Chiếm 1/3 chiều rộng của trip-item */
+    height: auto; /* Chiều cao tự động */
+    overflow: hidden; /* Đảm bảo ảnh không tràn ra */
+    display: flex;
+    align-items: center; /* Căn giữa ảnh theo chiều dọc */
+    justify-content: center; /* Căn giữa ảnh theo chiều ngang */
+}
+
+.trip-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Quan trọng: Đảm bảo ảnh lấp đầy và không bị méo */
+    display: block; /* Loại bỏ khoảng trắng thừa dưới ảnh */
+}
+
+.trip-item-detail {
+    flex: 2; /* Chiếm 2 phần (2/3 chiều rộng) */
+    padding: 30px;
+    display: flex;
+    flex-direction: column; /* Các nội dung xếp dọc */
+    justify-content: space-between; /* Đẩy nội dung ra 2 đầu (nếu cần) */
+}
+
+.trip-item-detail h3 {
+    font-size: 1.8em;
+    color: #01011B;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.trip-item-detail p {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.trip-item-detail p.description {
+    margin-bottom: 20px; /* Khoảng cách dưới đoạn mô tả dài */
+    max-height: 100px; /* Giới hạn chiều cao của đoạn mô tả */
+    overflow: auto; /* Ẩn phần văn bản thừa */
+    text-overflow: ellipsis; /* Thêm dấu ... nếu văn bản bị ẩn */
+}
+
+.trip-item-detail p.price {
+    font-size: 1.3em;
+    color: #ff5722; /* Màu cam nổi bật cho giá */
+    font-weight: bold;
+    margin-top: 15px; /* Khoảng cách trên giá */
+    margin-bottom: 20px;
+}
+
+.btn-trip-detail {
+    display: inline-block;
+    background-color: #007bff; /* Màu xanh dương cho nút Đặt vé */
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Căn nút về phía đầu của cột */
+}
+
+.btn-trip-detail:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive cho phần tuyến đường */
+@media (max-width: 992px) {
+    .trip-item {
+        flex-direction: column; /* Chuyển thành dạng cột trên màn hình nhỏ hơn */
+        max-width: 500px; /* Giảm chiều rộng tối đa */
+    }
+    .trip-image {
+        max-width: 100%; /* Ảnh chiếm toàn bộ chiều rộng */
+        height: 250px; /* Cố định chiều cao ảnh */
+    }
+    .trip-item-detail {
+        padding: 20px;
+    }
+    .btn-trip-detail {
+        width: 100%; /* Nút full width */
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .popular-trip-section h1 {
+        font-size: 2em;
+    }
+    .trip-item-detail h3 {
+        font-size: 1.5em;
+    }
+    .trip-item-detail p {
+        font-size: 0.95em;
+    }
+    .trip-item-detail p.price {
+        font-size: 1.2em;
+    }
+}
+
+/*============================================================================*/
+/* MAIN WEB PAGE */
+/* Container chính cho video */
+main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+}
+
+/* Thẻ video */
+.banner-video video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+/* Lớp phủ màu đen mờ trên video */
+.banner-video::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+/*THE END OF MAIN */
+
+/*============================================================================*/
+
+/* ======================== */
+/* 5. CSS cho các phần nội dung chính */
+/* ======================== */
+
+/* Thiết lập container chung cho nội dung */
+.container {
+    max-width: 1100px; /* Giới hạn chiều rộng nội dung */
+    margin: 0 auto; /* Căn giữa container */
+    padding: 0 20px; /* Padding hai bên để nội dung không dính sát mép */
+}
+
+/* Phần giới thiệu chung (About Us Section) */
+.about-us-section {
+    padding: 80px 0; /* Khoảng cách trên dưới cho section */
+    text-align: center;
+    background-color: #f9f9f9; /* Màu nền nhẹ nhàng cho section này */
+    color: #333; /* Màu chữ chính */
+}
+
+.about-us-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: var(--bg-secondary);
+}
+
+.about-us-section .intro-text {
+    font-size: 1.1em;
+    line-height: 1.8;
+    max-width: 800px; /* Giới hạn chiều rộng đoạn văn */
+    margin: 0 auto 50px auto; /* Căn giữa và khoảng cách dưới */
+}
+
+/* Lưới thống kê (Stats Grid) */
+.stats-grid {
+    display: flex; /* Dùng flexbox để các mục nằm ngang */
+    justify-content: center; /* Căn giữa các mục */
+    flex-wrap: wrap; /* Cho phép các mục xuống dòng trên màn hình nhỏ */
+    gap: 30px; /* Khoảng cách giữa các mục thống kê */
+    margin-bottom: 50px;
+}
+
+.stat-item {
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+    flex-basis: 220px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.stat-item:hover {
+    transform: translateY(-5px); /* Bay lên nhẹ khi hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* Bóng đổ đậm hơn khi hover */
+}
+
+.stat-item h3 {
+    font-size: 2.8em; 
+    color: #007bff; 
+    margin-bottom: 5px;
+}
+
+.stat-item p {
+    font-size: 1em;
+    color: #555;
+    margin: 0;
+}
+
+/* Nút "Tìm hiểu thêm" */
+.btn-primary {
+    display: inline-block;
+    background-color: #007bff; /* Màu xanh dương nổi bật */
+    color: #fff;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Đổi màu khi hover */
+}
+
+
+/*============================================================================*/

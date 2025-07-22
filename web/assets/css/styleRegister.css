@@ -1,0 +1,222 @@
+
+/* THE HEADER*/
+:root {
+
+    --bg-primary: #ffffff;
+    --bg-secondary: #01011B;
+
+
+    --text-primary: #F8F8F8;
+
+    --ac-primary: #00AE72;
+    --ac-hover: #006241;
+    --ac-secondary: #2ECC71;
+    --btn-hover: #6C7B8B;
+
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    color: var(--text-primary);
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../images/login-bg.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    font-size: 18px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    background-color: var(--bg-secondary);
+}
+
+.logo a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.nav-container {
+    flex: 1;
+}
+
+.nav-container ul {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-container ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-container ul li a {
+    display: block;
+    padding: 10px 25px;
+    margin: 0 5px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--nav-link);
+}
+
+.nav-container ul li a:hover {
+    background-color: var(--btn-hover);
+}
+
+/* THE END OF HEADER*/
+
+
+/* LOGIN PANNEL */
+
+.login-pannel {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top:12%;
+    transform: translateX(-50%);
+    max-width: 900px;
+    width: 90%;
+    min-height: 550px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    border: 1px solid black;
+}
+
+.login-pannel-left {
+    width: 100%;
+    flex-grow: 2;
+    background-image: url('../images/login-universe.png');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 12px 0 0 12px;
+}
+
+.login-pannel-right {
+    width: 100%;
+    flex-grow: 1;
+    margin: 65px 55px;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-form h2 {
+    text-align: center;
+    color: var(--bg-secondary);
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+}
+
+.user-input {
+    width: 100%;
+}
+
+.user-input input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: var(--bg-secondary);
+    border: 1px solid lightgray;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.user-input input:focus {
+    border: 1px solid currentColor;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-button .btn1{
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    padding: 15px 0;
+    margin-top: 25px;
+    border-radius: 12px;
+    background-color: var(--ac-primary);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+    border: none;
+}
+
+.form-button .btn1:hover {
+    background-color: var(--ac-hover);
+}
+
+.divider-line {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+span {
+    color: var(--bg-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.form-button .btn2{
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    padding: 15px 0;
+    border-radius: 12px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.form-button .btn2:hover {
+    background-color: #000044;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background-color: #fdecea;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+    max-width: 100%;
+    text-align: center;
+
+}
+
+#copyright {
+    text-align: center;
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-top: 10px; 
+    color: #01011B;
+}
+
+/* THE END OF LOGIN PANNEL  */
+

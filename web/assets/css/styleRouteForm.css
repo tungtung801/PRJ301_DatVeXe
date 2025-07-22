@@ -1,0 +1,222 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 13, 2025, 11:31:51 AM
+    Author     : Tung Nguyen
+*/
+/* ========== Base Styles ========== */
+:root {
+    --primary: #3a4f7a;
+    --secondary: #4d648d;
+    --accent: #7eb2dd;
+    --light: #f8f9fa;
+    --dark: #2c3e50;
+    --success: #28a745;
+    --error: #dc3545;
+    --warning: #ffc107;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ========== Main Content Layout ========== */
+.main-content {
+    margin-left: 250px;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+.content {
+    padding: 20px 30px;
+}
+
+
+
+/* ========== Form Sections ========== */
+.search, .add {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+}
+
+.search h3, .add h3 {
+    margin-bottom: 20px;
+    color: var(--dark);
+    font-size: 1.5rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+/* ========== Form Elements ========== */
+form {
+    display: grid;
+    gap: 15px;
+}
+
+input[type="text"],
+select {
+    padding: 12px 15px;
+    border: 1px solid #e0e6ed;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    width: 100%;
+    transition: var(--transition);
+}
+
+input[type="text"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(126, 178, 221, 0.2);
+}
+
+input[type="submit"] {
+    padding: 12px 25px;
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    justify-self: start;
+}
+
+input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(58, 79, 122, 0.3);
+}
+
+/* ========== Message Styles ========== */
+.message {
+    padding: 12px 20px;
+    margin: 10px 0;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+}
+
+.message:empty {
+    display: none;
+}
+
+.message.success {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+}
+
+.message.error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--error);
+    border-left: 4px solid var(--error);
+}
+
+/* ========== Route Table Styles ========== */
+.show {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+thead {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: white;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    font-weight: 600;
+}
+
+tbody tr {
+    border-bottom: 1px solid #e0e6ed;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* ========== Empty State ========== */
+.show p {
+    text-align: center;
+    color: #6c757d;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* ========== Responsive Adjustments ========== */
+@media (max-width: 992px) {
+    .search, .add {
+        padding: 20px;
+    }
+    
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .user-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .content-header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    input[type="text"],
+    select,
+    input[type="submit"] {
+        width: 100%;
+    }
+    
+    .search, .add {
+        padding: 15px;
+    }
+}

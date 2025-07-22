@@ -1,0 +1,220 @@
+
+/* THE HEADER*/
+:root {
+    /*background*/
+    --bg-primary: #ffffff;
+    --bg-secondary: #01011B;
+
+    /*text, tittle*/
+    --text-primary: #F8F8F8; /*(Off-White)*/
+    --text-seconday: #CED4DA; /*(Light Gray)*/
+
+    /* accent (màu nhấn)*/
+    --ac-primary: #00AE72; /*(Golden Yellow)*/
+    --ac-hover: #006241; /*(Dark Goldenrod)*/
+    --ac-secondary: #2ECC71; /*(Slate Blue)*/
+    --btn-hover: #6C7B8B;
+
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    color: var(--text-primary);
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../images/login-bg.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+    font-size: 18px;
+    transform: scaleX;
+}
+
+
+
+
+/* LOGIN PANNEL */
+
+.login-pannel {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top:25%;
+    transform: translateX(-50%);
+    max-width: 900px;
+    width: 90%;
+    min-height: 550px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    border: 1px solid black;
+}
+
+.login-pannel-left {
+    width: 100%;
+    flex-grow: 2;
+    background-image: url('../images/login-universe.png');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 12px 0 0 12px;
+}
+
+.login-pannel-right {
+    width: 100%;
+    flex-grow: 1;
+    margin:  65px 55px;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-form h2 {
+    text-align: center;
+    color: var(--bg-secondary);
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+}
+
+.user-input {
+    width: 100%;
+}
+
+.user-input input {
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    color: var(--bg-secondary);
+    border: 1px solid lightgray;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.user-input input:focus {
+    border: 1px solid currentColor;
+}
+
+.form-button {
+    margin-top: 28px;
+    width: 100%;
+}
+
+.form-button-first {
+    color: var(--bg-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-button-first .remember-me-group input[type="checkbox"]{
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: var(--bg-secondary);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.form-button-first .remember-me-group label {
+    color: var(--bg-secondary);
+}
+
+.form-button-first input[type="submit"] {
+    border: none;
+    border-radius: 12px;
+    padding: 15px 30px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.form-button input[type="submit"]:hover {
+    background-color: #000044;
+}
+
+.form-button-second {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.form-button-second .divider-line {
+    color: var(--bg-secondary);
+}
+
+.form-button-second p{
+    margin-top: 30px;
+    color: var(--bg-secondary);
+}
+
+.form-button-second a{
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    padding: 15px 0;
+    margin-top: 25px;
+    background-color: var(--ac-primary);
+    border-radius: 12px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.6);
+}
+
+.form-button-second a:hover {
+    background-color: var(--ac-hover);
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background-color: #fdecea;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+    max-width: 100%;
+    text-align: center;
+}
+
+.forgot-link {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--bg-secondary);
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: rgba(1, 1, 27, 0.05); /* nền nhẹ tí */
+}
+
+.forgot-link:hover {
+    background-color: rgba(1, 1, 27, 0.1);
+    color: red;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#copyright {
+    text-align: center;
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-top: 10px; 
+    color: #01011B;
+}
+/* THE END OF LOGIN PANNEL */
+
+
+

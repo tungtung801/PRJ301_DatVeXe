@@ -1,0 +1,91 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 8, 2025, 5:37:04 PM
+    Author     : Tung Nguyen
+*/
+
+/* FOOTER */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+footer {
+    background-color: #01011B;
+    color: #fff;
+    padding: 30px 40px;
+    text-align: center;
+}
+
+.footer-name {
+    margin-bottom: 20px;
+    color: orangered;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    text-align: left;
+}
+
+.footer-left,
+.footer-right {
+    flex: 1;
+    min-width: 250px; /* Chiều rộng tối thiểu cho mỗi cột để không bị quá hẹp */
+}
+
+.footer-left strong {
+    color: orangered;
+}
+
+.footer-left p,
+.footer-right ul {
+    margin-bottom: 10px; /* Khoảng cách giữa các dòng thông tin */
+}
+
+.footer-right ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 0;
+}
+
+.footer-right ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà khi hover */
+}
+
+.footer-right ul li a:hover {
+    color: #007bff;
+}
+
+.footer-tem {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+.footer-tem img {
+    height: 40px; /* Điều chỉnh chiều cao ảnh tem */
+    width: auto; /* Giữ tỉ lệ ảnh */
+    object-fit: contain;
+}
+
+#copyright {
+    font-size: 0.85em;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Đường kẻ phân cách mờ */
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* FOOTER */
+
